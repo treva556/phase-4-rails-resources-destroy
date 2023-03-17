@@ -1,53 +1,43 @@
-class BirdsController < ApplicationController
+class PlantsController < ApplicationController
 
-  # GET /birds
+  # GET /plants
   def index
-    birds = Bird.all
-    render json: birds
+    plants = Plant.all
+    render json: plants
   end
 
-  # POST /birds
-  def create
-    bird = Bird.create(bird_params)
-    render json: bird, status: :created
-  end
-
-  # GET /birds/:id
+  # GET /plants/:id
   def show
-    bird = Bird.find_by(id: params[:id])
-    if bird
-      render json: bird
-    else
-      render json: { error: "Bird not found" }, status: :not_found
-    end
+    plant = Plant.find_by(id: params[:id])
+    render json: plant
   end
 
-  # PATCH /birds/:id
+  # POST /plants
+  def create
+    plant = Plant.create(plant_params)
+    render json: plant, status: :created
+  end
+
   def update
-    bird = Bird.find_by(id: params[:id])
-    if bird
-      bird.update(bird_params)
-      render json: bird
-    else
-      render json: { error: "Bird not found" }, status: :not_found
-    end
+    plant = find_plant
+    plant.update(plant_params)
+    render json: plant
   end
 
-  # PATCH /birds/:id/like
-  def increment_likes
-    bird = Bird.find_by(id: params[:id])
-    if bird
-      bird.update(likes: bird.likes + 1)
-      render json: bird
-    else
-      render json: { error: "Bird not found" }, status: :not_found
-    end
+  def destroy
+    plant = find_plant
+    plant.destroy
+    head :no_content
   end
 
   private
 
-  def bird_params
-    params.permit(:name, :species, :likes)
+  def plant_params
+    params.permit(:name, :image, :price, :is_in_stock)
   end
 
+  def find_plant
+    Plant.find_by(id: params[:id])
+  end
+  
 end
